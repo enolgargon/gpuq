@@ -1,0 +1,29 @@
+from datetime import datetime
+from typing import Optional
+import getpass
+import uuid
+
+ISO_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+
+
+def validate_iso8601(value: Optional[str], field_name: str) -> None:
+    if value is None:
+        return
+    try:
+        datetime.strptime(value, ISO_FORMAT)
+    except ValueError:
+        raise ValueError(
+            f"Invalid ISO8601 timestamp for '{field_name}': {value}"
+        )
+
+
+def now_iso8601() -> str:
+    return datetime.utcnow().strftime(ISO_FORMAT)
+
+
+def get_current_user() -> str:
+    return getpass.getuser()
+
+
+def generate_job_id() -> str:
+    return f"job-{uuid.uuid4().hex[:8]}"
