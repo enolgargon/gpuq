@@ -60,9 +60,19 @@ The intended trust model is **cooperative users** on a shared system.
 
 ## Project status
 
-⚠️ **Preliminary design and documentation phase**
+⚠️ **Active development**
 
-At the current stage no production-ready implementation is available yet. Active work is focused on documentation and start de develop.
+The project is under active development and not yet production-ready.
+
+At the current stage, the following components are implemented and covered by unit tests:
+
+- `gpuq_cli`: command-line interface for job submission, listing and cancellation
+- Job domain model with validation and YAML serialization
+- Filesystem-based persistent job queue
+
+The GPU dispatcher and execution layer (`gpuq-dispatcher`) are not implemented yet and will be developed in subsequent phases.
+
+Architecture, design rationale and implementation details are documented in the `docs/` directory.
 
 ---
 
