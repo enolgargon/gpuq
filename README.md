@@ -57,7 +57,6 @@ The intended trust model is **cooperative users** on a shared system.
 
 ---
 
-
 ## Project status
 
 ⚠️ **Active development**
@@ -66,13 +65,40 @@ The project is under active development and not yet production-ready.
 
 At the current stage, the following components are implemented and covered by unit tests:
 
-- `gpuq_cli`: command-line interface for job submission, listing and cancellation
+- `gpuq_cli`: command-line interface for job submission, listing, state inspection and cancellation
 - Job domain model with validation and YAML serialization
 - Filesystem-based persistent job queue
+- `gpuq_dispatcher`: GPU job dispatcher coordinating queue polling, FIFO scheduling, GPU locking and execution
+- FIFO scheduling policy
+- Filesystem-based GPU lock mechanism
+- systemd-based job execution layer (rootless, user-scoped)
 
-The GPU dispatcher and execution layer (`gpuq-dispatcher`) are not implemented yet and will be developed in subsequent phases.
+Unit tests focus on deterministic logic and filesystem-based components.  
+System-level execution (systemd, Docker, GPU access) is intentionally excluded from unit tests.
+
+The project is currently suitable for controlled experimentation and further development, but it has not yet undergone production hardening, long-running validation or operational tuning.
 
 Architecture, design rationale and implementation details are documented in the `docs/` directory.
+
+---
+
+## Running tests
+
+Tests are executed using `pytest`. Since the project is not installed as a
+Python package, the repository root must be added to `PYTHONPATH`.
+
+To run the full test suite with coverage:
+
+```bash
+PYTHONPATH=$(pwd) pytest \
+  --cov=gpuq_cli \
+  --cov=gpuq_dispatcher \
+  --cov-report=term-missing
+```
+
+Coverage reports focus on deterministic logic and filesystem-based components.
+System-level execution (systemd, Docker, GPU access) is intentionally excluded
+from unit tests.
 
 ---
 
