@@ -2,9 +2,9 @@ from pathlib import Path
 from typing import List, Optional
 import os
 
-from gpuq_cli.jobs import Job
-from gpuq_cli.errors import QueueError
-from gpuq_cli.utils import now_iso8601
+from .jobs import Job
+from .errors import QueueError
+from .utils import now_iso8601
 
 
 # -------------------------

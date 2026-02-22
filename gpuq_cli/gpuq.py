@@ -2,8 +2,8 @@
 
 import sys
 
-from gpuq_cli.cli import build_parser, dispatch
-from gpuq_cli.errors import GpuqError, JobValidationError, QueueError
+from .cli import build_parser, dispatch
+from .errors import GpuqError, JobValidationError, QueueError
 
 
 def main() -> int:

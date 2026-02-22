@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import Optional, Dict, Any
 import yaml
 
-from gpuq_cli.errors import JobValidationError
-from gpuq_cli.utils import validate_iso8601
+from .errors import JobValidationError
+from .utils import validate_iso8601
 
 @dataclass
 class Job:

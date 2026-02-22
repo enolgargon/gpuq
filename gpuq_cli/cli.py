@@ -2,10 +2,10 @@ import argparse
 from pathlib import Path
 from typing import List
 
-from gpuq_cli.jobs import Job
-from gpuq_cli.queue import enqueue_job, list_jobs, cancel_job
-from gpuq_cli.utils import generate_job_id, get_current_user, now_iso8601
-from gpuq_cli.errors import JobValidationError, QueueError
+from .jobs import Job
+from .queue import enqueue_job, list_jobs, cancel_job
+from .utils import generate_job_id, get_current_user, now_iso8601
+from .errors import JobValidationError, QueueError
 
 
 # -------------------------
