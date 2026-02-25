@@ -57,28 +57,20 @@ The intended trust model is **cooperative users** on a shared system.
 
 ---
 
-## Project status
+## Project Status
 
-⚠️ **Active development**
+The initial prototype development phase of **gpuq** has been completed.
 
-The project is under active development and not yet production-ready.
+The core functionality — including the CLI, dispatcher, and filesystem-based queue mechanism — is now implemented and stable at the prototype level.
 
-At the current stage, the following components are implemented and covered by unit tests:
+Current efforts are focused on:
 
-- `gpuq_cli`: command-line interface for job submission, listing, state inspection and cancellation
-- Job domain model with validation and YAML serialization
-- Filesystem-based persistent job queue
-- `gpuq_dispatcher`: GPU job dispatcher coordinating queue polling, FIFO scheduling, GPU locking and execution
-- FIFO scheduling policy
-- Filesystem-based GPU lock mechanism
-- systemd-based job execution layer (rootless, user-scoped)
+- Real-world testing in multi-user environments
+- Validation under realistic GPU workloads
+- Deployment strategy refinement
+- Operational hardening and usability improvements
 
-Unit tests focus on deterministic logic and filesystem-based components.  
-System-level execution (systemd, Docker, GPU access) is intentionally excluded from unit tests.
-
-The project is currently suitable for controlled experimentation and further development, but it has not yet undergone production hardening, long-running validation or operational tuning.
-
-Architecture, design rationale and implementation details are documented in the `docs/` directory.
+The project is transitioning from prototype development to evaluation, integration, and practical adoption within the target environment.
 
 ---
 
