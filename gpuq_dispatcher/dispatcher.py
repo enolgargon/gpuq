@@ -7,6 +7,7 @@ from .queue import (
     mark_job_running,
     mark_job_finished,
     mark_job_canceled,
+    get_running_jobs
 )
 from .scheduler import Scheduler
 from .executor import JobExecutor
@@ -34,6 +35,21 @@ class Dispatcher:
     def _request_shutdown(self) -> None:
         self._running = False
 
+    def _reconcile_running_jobs(self) -> None:
+    running_jobs = get_running_jobs()
+
+    for job in running_jobs:
+        if self._executor.is_unit_active(job):
+            # Still running, nothing to do
+            continue
+
+        # Unit no longer active → retrieve exit code
+        exit_code = self._executor.get_unit_exit_code(job)
+        finished_at = now_iso8601()
+        success = exit_code == 0
+
+        mark_job_finished(job.job_id, finished_at, success)
+
     # ------------------------------------------------------------------
     # Main loop
     # ------------------------------------------------------------------
@@ -51,8 +67,11 @@ class Dispatcher:
             sleep_interruptible(POLL_INTERVAL, lambda: not self._running)
 
     def _run_once(self) -> None:
-        queued_jobs = get_queued_jobs()
+        self._reconcile_running_jobs()
+        if get_running_jobs():
+            return
 
+        queued_jobs = get_queued_jobs()
         job = self._scheduler.select_next_job(queued_jobs)
 
         if not job:

@@ -62,3 +62,37 @@ class JobExecutor:
         ]
 
         return systemd_cmd
+
+    def is_unit_active(self, job: Job) -> bool:
+        unit_name = self._unit_name(job)
+
+        result = subprocess.run(
+            ["systemctl", "is-active", unit_name],
+            capture_output=True,
+            text=True,
+        )
+
+        return result.stdout.strip() == "active"
+
+    def get_unit_exit_code(self, job: Job) -> int:
+        unit_name = self._unit_name(job)
+
+        result = subprocess.run(
+            [
+                "systemctl",
+                "show",
+                unit_name,
+                "--property=ExecMainStatus",
+                "--value",
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        if result.returncode != 0:
+            return 1  # assume failure if cannot retrieve
+
+        try:
+            return int(result.stdout.strip())
+        except ValueError:
+            return 1

@@ -119,6 +119,9 @@ def get_job(job_id: str) -> Job:
 def get_queued_jobs() -> List[Job]:
     return list_jobs(state="queued")
 
+def get_running_jobs() -> List[Job]:
+    return list_jobs(state="running")
+
 
 def mark_job_running(job_id: str, started_at: str) -> Job:
     _ensure_queue_structure()
