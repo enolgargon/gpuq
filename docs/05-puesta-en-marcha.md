@@ -216,8 +216,6 @@ Requires=docker.service
 
 [Service]
 Type=simple
-User=gpuq
-Group=gpuq
 WorkingDirectory=/opt/gpuq
 ExecStart=/opt/gpuq/venv/bin/python -m gpuq_dispatcher
 Restart=on-failure

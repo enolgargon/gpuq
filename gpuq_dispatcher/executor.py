@@ -46,22 +46,21 @@ class JobExecutor:
             f"docker compose -f {shlex.quote(compose_file)} up"
         )
 
-        systemd_cmd = [
-            "systemd-run",
-            "--user",
-            "--unit",
-            self._unit_name(job),
-            "--working-directory",
-            job.project_path,
-            "--collect",
-            "--wait",
-            "--pipe",
-            "bash",
-            "-c",
-            docker_cmd,
-        ]
+        systemd_user_cmd = (
+            f"systemd-run --user "
+            f"--unit {unit_name} "
+            f"--working-directory {shlex.quote(job.project_path)} "
+            f"--collect --wait --pipe "
+            f"bash -c {shlex.quote(docker_cmd)}"
+        )
 
-        return systemd_cmd
+        return [
+            "runuser",
+            "-l",
+            job.user,
+            "-c",
+            systemd_user_cmd,
+        ]
 
     def is_unit_active(self, job: Job) -> bool:
         unit_name = self._unit_name(job)
