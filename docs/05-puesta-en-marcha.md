@@ -116,12 +116,10 @@ chown -R root:root /opt/gpuq
 chmod -R 755 /opt/gpuq
 ```
 
-2. Exposición del CLI en el sistema. Para evitar que los usuarios escriban la ruta completa vamos a generar un fichero en `/usr/local/bin`, lo que peritirá ejecutar la orden sólamente escribiendo `gpuq` y además establecerá el ejecutable de python a utilizar en la ajecución. Para ello se creará el fichero `/usr/local/bin/gpuq` con el siguiente contenido
+2. Exposición del CLI en el sistema. Para evitar que los usuarios escriban la ruta completa vamos a crear un enlace simbólico al ejecutable en `/usr/local/bin`, lo que peritirá ejecutar la orden sólamente escribiendo `gpuq`. Para ello se ejecuta la orden:
 
 ```bash
-#!/bin/bash
-export PATH="/opt/gpuq/venv/bin:$PATH"
-exec /opt/gpuq/gpuq_cli/gpuq "$@"
+ln -s /opt/gpuq/bin/gpuq /usr/local/bin/gpuq
 ```
 
 Asignarele correctamente los permisos al nuevo fichero y verificar este paso ejecutando:
