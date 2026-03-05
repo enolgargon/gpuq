@@ -1,8 +1,18 @@
 # gpuq
 
-`gpuq` is a minimal GPU job queue designed for multi-user Linux servers where GPU resources are scarce and shared between multiple users.
+<img src="docs/imgs/gpuq.png" align="left" width="240px"/>
 
-The project focuses on **serializing GPU usage**, **preserving correct file ownership**, and **providing auditability**, while remaining aligned with standard Linux tooling such as **Docker rootless** and **systemd --user**.
+**gpuq** is a lightweight command-line tool designed to simplify GPU usage in shared computing environments. In many research labs and development servers, multiple users compete for a limited number of GPUs, often leading to manual coordination, inefficient utilization, or failed experiments when GPUs become unexpectedly occupied.
+
+gpuq addresses this problem by providing a simple queue-based mechanism for launching GPU workloads. Instead of manually monitoring GPU availability, users can submit jobs and let gpuq automatically execute them as soon as resources become free. This makes it easier to run long experiment queues, automate training pipelines, and avoid conflicts between users sharing the same hardware.
+
+The tool is intentionally minimal and easy to integrate into existing workflows. It works well with common deep learning frameworks and experiment pipelines, allowing researchers to focus on experimentation rather than resource management.
+
+To help users adopt gpuq in modern reproducible environments, we also provide a **comprehensive documentation website** that explains how to integrate the tool with **Docker-based workflows**. The documentation includes practical guides for setting up GPU-enabled containers, adapting existing research pipelines, and using gpuq to schedule experiments inside containerized environments.
+
+Full documentation and usage guides are available at:
+
+👉 [https://enolgargon.github.io/gpuq-docs/](https://enolgargon.github.io/gpuq-docs/)
 
 ---
 
