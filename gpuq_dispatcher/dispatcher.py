@@ -38,17 +38,17 @@ class Dispatcher:
     def _reconcile_running_jobs(self) -> None:
         running_jobs = get_running_jobs()
 
-    for job in running_jobs:
-        if self._executor.is_unit_active(job):
-            # Still running, nothing to do
-            continue
+        for job in running_jobs:
+            if self._executor.is_unit_active(job):
+                # Still running, nothing to do
+                continue
 
-        # Unit no longer active → retrieve exit code
-        exit_code = self._executor.get_unit_exit_code(job)
-        finished_at = now_iso8601()
-        success = exit_code == 0
+            # Unit no longer active → retrieve exit code
+            exit_code = self._executor.get_unit_exit_code(job)
+            finished_at = now_iso8601()
+            success = exit_code == 0
 
-        mark_job_finished(job.job_id, finished_at, success)
+            mark_job_finished(job.job_id, finished_at, success)
 
     # ------------------------------------------------------------------
     # Main loop
