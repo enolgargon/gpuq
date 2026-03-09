@@ -2,7 +2,7 @@ import os
 import shutil
 from typing import List, Optional
 
-from .config import QUEUE_ROOT, QUEUE_STATES
+from .config import QUEUE_ROOT, QUEUE_STATES, SIGNALS_ROOT
 from .errors import QueueError
 from .jobs import Job
 
@@ -15,6 +15,14 @@ from .jobs import Job
 def _ensure_queue_structure() -> None:
     for state in QUEUE_STATES:
         os.makedirs(os.path.join(QUEUE_ROOT, state), exist_ok=True)
+
+
+def _cancel_signal_path(job_id: str) -> str:
+    return os.path.join(SIGNALS_ROOT, "cancel", job_id)
+
+
+def _ensure_signals_structure() -> None:
+    os.makedirs(os.path.join(SIGNALS_ROOT, "cancel"), exist_ok=True)
 
 
 def _job_file_path(state: str, job_id: str) -> str:
@@ -76,6 +84,44 @@ def _move_job(job_id: str, from_state: str, to_state: str) -> None:
 # Public API
 # ------------------------------------------------------------------
 
+def get_cancel_requests() -> List[str]:
+    _ensure_signals_structure()
+
+    cancel_dir = os.path.join(SIGNALS_ROOT, "cancel")
+
+    try:
+        filenames = os.listdir(cancel_dir)
+    except FileNotFoundError:
+        return []
+
+    job_ids: List[str] = []
+
+    for filename in filenames:
+        path = os.path.join(cancel_dir, filename)
+
+        if not os.path.isfile(path):
+            continue
+
+        job_ids.append(filename)
+
+    return job_ids
+
+
+def clear_cancel_request(job_id: str) -> None:
+    _ensure_signals_structure()
+
+    path = _cancel_signal_path(job_id)
+
+    if not os.path.exists(path):
+        return
+
+    try:
+        os.remove(path)
+    except Exception as e:
+        raise QueueError(
+            f"Failed to clear cancel request for job {job_id}: {e}"
+        ) from e
+        
 
 def list_jobs(state: Optional[str] = None) -> List[Job]:
     _ensure_queue_structure()

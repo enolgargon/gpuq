@@ -12,7 +12,16 @@ from .config import (
 class JobExecutor:
     def __init__(self) -> None:
         pass
+    
+    def stop_unit(self, job: Job) -> None:
+        unit_name = self._unit_name(job)
 
+        subprocess.run(
+            ["systemctl", "stop", unit_name],
+            capture_output=True,
+            text=True,
+        )
+    
     def execute(self, job: Job) -> int:
         unit_name = self._unit_name(job)
 
@@ -50,7 +59,7 @@ class JobExecutor:
             f"systemd-run --user "
             f"--unit {self._unit_name(job)} "
             f"--working-directory {shlex.quote(job.project_path)} "
-            f"--collect --wait --pipe "
+            f"--collect "
             f"bash -c {shlex.quote(docker_cmd)}"
         )
 

@@ -11,6 +11,9 @@ from .utils import now_iso8601
 # Configuration
 # -------------------------
 
+DEFAULT_SIGNALS_ROOT = Path("./signals")
+SIGNALS_ROOT = Path(os.environ.get("GPUQ_SIGNALS_ROOT", DEFAULT_SIGNALS_ROOT))
+
 DEFAULT_QUEUE_ROOT = Path("./queue")
 QUEUE_ROOT = Path(os.environ.get("GPUQ_QUEUE_ROOT", DEFAULT_QUEUE_ROOT))
 
@@ -20,6 +23,17 @@ STATES = ["queued", "running", "finished", "failed", "canceled"]
 # -------------------------
 # Internal helpers
 # -------------------------
+
+def _ensure_signals_structure() -> None:
+    """
+    Ensure that the signals root and cancel directory exist.
+    """
+    SIGNALS_ROOT.mkdir(parents=True, exist_ok=True)
+    (SIGNALS_ROOT / "cancel").mkdir(exist_ok=True)
+
+
+def _cancel_signal_path(job_id: str) -> Path:
+    return SIGNALS_ROOT / "cancel" / job_id
 
 def _ensure_queue_structure() -> None:
     """
@@ -118,39 +132,14 @@ def load_job(job_id: str) -> Job:
         raise QueueError(f"Failed to load job '{job_id}': {e}")
 
 
-def move_job(job_id: str, target_state: str) -> None:
-    """
-    Move a job to a different state.
-    """
-    _ensure_queue_structure()
-    _validate_state(target_state)
-
-    current_path = _find_job(job_id)
-
-    if current_path is None:
-        raise QueueError(f"Job '{job_id}' not found")
-
-    target_path = _job_path(target_state, job_id)
-
-    if target_path.exists():
-        raise QueueError(
-            f"Job '{job_id}' already exists in state '{target_state}'"
-        )
-
-    try:
-        current_path.rename(target_path)
-    except OSError as e:
-        raise QueueError(f"Failed to move job '{job_id}': {e}")
-
-
 def cancel_job(job_id: str) -> None:
     """
-    Cancel a job.
-    If it is queued, it is moved to 'canceled'.
-    If it is running, it is also moved to 'canceled'.
+    Request cancellation of a job by creating a cancel signal.
     """
     _ensure_queue_structure()
+    _ensure_signals_structure()
 
+    # Validate that job exists
     current_path = _find_job(job_id)
 
     if current_path is None:
@@ -163,46 +152,14 @@ def cancel_job(job_id: str) -> None:
             f"Cannot cancel job '{job_id}' in state '{current_state}'"
         )
 
-    move_job(job_id, "canceled")
+    signal_path = _cancel_signal_path(job_id)
 
-
-def mark_job_started(job_id: str) -> None:
-    """
-    Update started_at timestamp and move job to 'running'.
-    Intended for dispatcher use.
-    """
-    job = load_job(job_id)
-    job.mark_started(now_iso8601())
-
-    # Overwrite file in current location before moving
-    current_path = _find_job(job_id)
-    if current_path is None:
-        raise QueueError(f"Job '{job_id}' not found")
+    if signal_path.exists():
+        return
 
     try:
-        current_path.write_text(job.to_yaml())
+        signal_path.touch()
     except OSError as e:
-        raise QueueError(f"Failed to update job '{job_id}': {e}")
-
-    move_job(job_id, "running")
-
-
-def mark_job_finished(job_id: str, success: bool) -> None:
-    """
-    Update finished_at timestamp and move job to 'finished' or 'failed'.
-    Intended for dispatcher use.
-    """
-    job = load_job(job_id)
-    job.mark_finished(now_iso8601())
-
-    current_path = _find_job(job_id)
-    if current_path is None:
-        raise QueueError(f"Job '{job_id}' not found")
-
-    try:
-        current_path.write_text(job.to_yaml())
-    except OSError as e:
-        raise QueueError(f"Failed to update job '{job_id}': {e}")
-
-    target_state = "finished" if success else "failed"
-    move_job(job_id, target_state)
+        raise QueueError(
+            f"Failed to create cancel signal for job '{job_id}': {e}"
+        )

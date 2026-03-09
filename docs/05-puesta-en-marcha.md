@@ -155,6 +155,8 @@ loginctl enable-linger <usuario>
 
 ```bash
 mkdir -p /var/lib/gpuq/queue/{queued,running,finished,failed,canceled}
+mkdir -p /var/lib/gpuq/signals/cancel
+
 ```
 
 5. Proteger la estructura de la cola. Para proteger la estructura se asignará su propiedad al usuario y grupo `gpuq` y se asignarar permisos para evitar modificaciones manuales de la cola en la medida de lo posible.
@@ -162,6 +164,8 @@ mkdir -p /var/lib/gpuq/queue/{queued,running,finished,failed,canceled}
 ```bash
 chown -R gpuq:gpuq /var/lib/gpuq
 chmod 2770 /var/lib/gpuq/queue
+chmod 2770 /var/lib/gpuq/signals
+chmod 2770 /var/lib/gpuq/signals/cancel
 chmod 2770 /var/lib/gpuq/queue/queued
 chmod 2750 /var/lib/gpuq/queue/{running,finished,failed,canceled}
 ```

@@ -9,6 +9,7 @@ from .errors import ConfigurationError
 
 # Root directory of the filesystem-based job queue
 QUEUE_ROOT = os.environ.get("GPUQ_QUEUE_ROOT", "./queue")
+SIGNALS_ROOT = os.environ.get("GPUQ_SIGNALS_ROOT", "./signals")
 
 # Subdirectories representing job states
 QUEUE_STATES = [

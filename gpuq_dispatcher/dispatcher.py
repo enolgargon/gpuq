@@ -7,7 +7,9 @@ from .queue import (
     mark_job_running,
     mark_job_finished,
     mark_job_canceled,
-    get_running_jobs
+    get_running_jobs,
+    get_cancel_requests,
+    clear_cancel_request
 )
 from .scheduler import Scheduler
 from .executor import JobExecutor
@@ -34,6 +36,30 @@ class Dispatcher:
 
     def _request_shutdown(self) -> None:
         self._running = False
+
+    def _process_cancel_requests(self) -> None:
+    cancel_requests = get_cancel_requests()
+
+    if not cancel_requests:
+        return
+
+    running_jobs = {job.job_id: job for job in get_running_jobs()}
+
+    for job_id in cancel_requests:
+
+        if job_id in running_jobs:
+            job = running_jobs[job_id]
+            self._executor.stop_unit(job)
+
+        try:
+            mark_job_canceled(job_id)
+        except QueueError:
+            pass
+
+        clear_cancel_request(job_id)
+
+    def _process_signals(self) -> None:
+        self._process_cancel_requests()
 
     def _reconcile_running_jobs(self) -> None:
         running_jobs = get_running_jobs()
@@ -67,6 +93,7 @@ class Dispatcher:
             sleep_interruptible(POLL_INTERVAL, lambda: not self._running)
 
     def _run_once(self) -> None:
+        self._process_signals()
         self._reconcile_running_jobs()
         if get_running_jobs():
             return
