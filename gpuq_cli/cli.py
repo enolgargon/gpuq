@@ -26,7 +26,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Submit a new GPU job"
     )
     submit_parser.add_argument(
-        "--project",
+        "project",
         required=True,
         help="Path to project directory"
     )

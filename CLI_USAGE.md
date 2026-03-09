@@ -8,7 +8,7 @@ gpuq - minimal GPU job queue for multi-user Linux servers
 
 ## SYNOPSIS
 
-gpuq submit --project PATH [--compose FILE] [--description TEXT]
+gpuq submit PROJECT_PATH [--compose FILE] [--description TEXT]
 
 gpuq list [--state STATE]
 
@@ -47,7 +47,7 @@ dispatcher.
 
 #### OPTIONS
 
---project PATH  
+PROJECT_PATH  
     Path to the project directory containing the workload.
 
 --compose FILE  
@@ -68,7 +68,7 @@ If the project path does not exist, the command fails.
 
 #### EXAMPLE
 
-gpuq submit --project ./experiment1 --description "baseline training"
+gpuq submit ./experiment1 --description "baseline training"
 
 ---
 
