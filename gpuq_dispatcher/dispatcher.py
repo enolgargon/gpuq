@@ -36,7 +36,7 @@ class Dispatcher:
         self._running = False
 
     def _reconcile_running_jobs(self) -> None:
-    running_jobs = get_running_jobs()
+        running_jobs = get_running_jobs()
 
     for job in running_jobs:
         if self._executor.is_unit_active(job):

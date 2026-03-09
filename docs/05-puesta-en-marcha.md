@@ -223,7 +223,7 @@ Requires=docker.service
 [Service]
 Type=simple
 WorkingDirectory=/opt/gpuq
-ExecStart=/opt/gpuq/venv/bin/python -m gpuq_dispatcher
+ExecStart=/opt/gpuq/venv/bin/python -m gpuq_dispatcher.dispatcher
 Restart=on-failure
 RestartSec=5
 Environment="PYTHONUNBUFFERED=1"
