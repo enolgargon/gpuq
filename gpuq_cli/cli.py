@@ -27,7 +27,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     submit_parser.add_argument(
         "project",
-        required=True,
+        default=".",
         help="Path to project directory"
     )
     submit_parser.add_argument(

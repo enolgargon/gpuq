@@ -99,10 +99,18 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+3. Crear el fichero bin/gpuq que hará la ejecución con el entorno de Python correcto. Se puede tomar como plantilla el incluido en el directorio `bin_templates`.
+
+4. Modificar los permisos del bin para que permita su ejecución
+
+```bash
+chmod +x bin/gpuq
+```
+
 3. Verificar la integridad del software copiado.
 
 ```bash
-/opt/gpuq/gpuq_cli/gpuq --help
+/opt/gpuq/bin/gpuq --help
 ```
 
 

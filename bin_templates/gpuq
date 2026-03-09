@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec /opt/gpuq/venv/bin/python -m gpuq_cli.gpuq "$@"
