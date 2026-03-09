@@ -118,10 +118,7 @@ class Dispatcher:
                 return
 
             try:
-                exit_code = self._executor.execute(job)
-                finished_at = now_iso8601()
-                success = exit_code == 0
-                mark_job_finished(job.job_id, finished_at, success)
+                self._executor.execute(job)
             except ExecutionError:
                 finished_at = now_iso8601()
                 mark_job_finished(job.job_id, finished_at, success=False)
