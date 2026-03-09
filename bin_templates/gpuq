@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
+export GPUQ_QUEUE_ROOT=/var/lib/gpuq/queue/
+export PYTHONPATH=/opt/gpuq:$PYTHONPATH
 exec /opt/gpuq/venv/bin/python -m gpuq_cli.gpuq "$@"

@@ -228,13 +228,14 @@ Restart=on-failure
 RestartSec=5
 Environment="PYTHONUNBUFFERED=1"
 Environment="PATH=/opt/gpuq/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+Environment="GPUQ_QUEUE_ROOT=/var/lib/gpuq/queue/"
 UMask=0007
 
 # Seguridad adicional
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=full
-ProtectHome=true
+ProtectHome=false
 
 [Install]
 WantedBy=multi-user.target
@@ -276,7 +277,7 @@ En esta fase se validará el flujo completo del sistema utilizando el comportami
 
 2. Encolar un trabajo
 ```bash
-gpuq submit --project ./test_gpuq --description "test inicial"
+gpuq submit ./test_gpuq --description "test inicial"
 ```
 
 Resultado esperado:

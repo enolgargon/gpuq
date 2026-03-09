@@ -48,7 +48,7 @@ class JobExecutor:
 
         systemd_user_cmd = (
             f"systemd-run --user "
-            f"--unit {unit_name} "
+            f"--unit {self._unit_name(job)} "
             f"--working-directory {shlex.quote(job.project_path)} "
             f"--collect --wait --pipe "
             f"bash -c {shlex.quote(docker_cmd)}"

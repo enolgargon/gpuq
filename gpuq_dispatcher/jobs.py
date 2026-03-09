@@ -61,6 +61,7 @@ class Job:
 
     def to_dict(self) -> Dict[str, Any]:
         return {
+            "job_id": self.job_id,
             "user": self.user,
             "project_path": self.project_path,
             "compose_file": self.compose_file,
