@@ -14,22 +14,22 @@ class JobExecutor:
         pass
     
     def stop_unit(self, job: Job) -> None:
-    unit_name = self._unit_name(job)
+        unit_name = self._unit_name(job)
 
-    subprocess.run(
-        [
-            "runuser",
-            "-u",
-            job.user,
-            "--",
-            "systemctl",
-            "--user",
-            "stop",
-            unit_name,
-        ],
-        capture_output=True,
-        text=True,
-    )
+        subprocess.run(
+            [
+                "runuser",
+                "-u",
+                job.user,
+                "--",
+                "systemctl",
+                "--user",
+                "stop",
+                unit_name,
+            ],
+            capture_output=True,
+            text=True,
+        )
     
     def execute(self, job: Job) -> int:
         unit_name = self._unit_name(job)
