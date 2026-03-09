@@ -38,25 +38,25 @@ class Dispatcher:
         self._running = False
 
     def _process_cancel_requests(self) -> None:
-    cancel_requests = get_cancel_requests()
+        cancel_requests = get_cancel_requests()
 
-    if not cancel_requests:
-        return
+        if not cancel_requests:
+            return
 
-    running_jobs = {job.job_id: job for job in get_running_jobs()}
+        running_jobs = {job.job_id: job for job in get_running_jobs()}
 
-    for job_id in cancel_requests:
+        for job_id in cancel_requests:
 
-        if job_id in running_jobs:
-            job = running_jobs[job_id]
-            self._executor.stop_unit(job)
+            if job_id in running_jobs:
+                job = running_jobs[job_id]
+                self._executor.stop_unit(job)
 
-        try:
-            mark_job_canceled(job_id)
-        except QueueError:
-            pass
+            try:
+                mark_job_canceled(job_id)
+            except QueueError:
+                pass
 
-        clear_cancel_request(job_id)
+            clear_cancel_request(job_id)
 
     def _process_signals(self) -> None:
         self._process_cancel_requests()
