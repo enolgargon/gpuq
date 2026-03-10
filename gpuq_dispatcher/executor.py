@@ -1,6 +1,7 @@
 import subprocess
 import shlex
 from typing import Optional
+import pwd
 
 from .jobs import Job
 from .errors import ExecutionError
