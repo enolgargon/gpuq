@@ -16,12 +16,17 @@ class JobExecutor:
     def stop_unit(self, job: Job) -> None:
         unit_name = self._unit_name(job)
 
+        uid = pwd.getpwnam(job.user).pw_uid
+        runtime_dir = f"/run/user/{uid}"
+
         subprocess.run(
             [
                 "runuser",
                 "-u",
                 job.user,
                 "--",
+                "env",
+                f"XDG_RUNTIME_DIR={runtime_dir}",
                 "systemctl",
                 "--user",
                 "stop",
@@ -50,8 +55,13 @@ class JobExecutor:
 
         return result.returncode
 
+    import pwd
+
     def is_unit_active(self, job: Job) -> bool:
         unit_name = self._unit_name(job)
+
+        uid = pwd.getpwnam(job.user).pw_uid
+        runtime_dir = f"/run/user/{uid}"
 
         result = subprocess.run(
             [
@@ -59,6 +69,8 @@ class JobExecutor:
                 "-u",
                 job.user,
                 "--",
+                "env",
+                f"XDG_RUNTIME_DIR={runtime_dir}",
                 "systemctl",
                 "--user",
                 "is-active",
@@ -75,12 +87,17 @@ class JobExecutor:
     def get_unit_exit_code(self, job: Job) -> int:
         unit_name = self._unit_name(job)
 
+        uid = pwd.getpwnam(job.user).pw_uid
+        runtime_dir = f"/run/user/{uid}"
+
         result = subprocess.run(
             [
                 "runuser",
                 "-u",
                 job.user,
                 "--",
+                "env",
+                f"XDG_RUNTIME_DIR={runtime_dir}",
                 "systemctl",
                 "--user",
                 "show",
@@ -95,11 +112,9 @@ class JobExecutor:
         if result.returncode != 0:
             return 1
 
-        value = result.stdout.strip()
-
         try:
-            return int(value)
-        except (TypeError, ValueError):
+            return int(result.stdout.strip())
+        except ValueError:
             return 1
 
     # ------------------------------------------------------------------
