@@ -69,18 +69,17 @@ The intended trust model is **cooperative users** on a shared system.
 
 ## Project Status
 
-The initial prototype development phase of **gpuq** has been completed.
+gpuq has reached its first stable release (**v1.0**).
 
-The core functionality — including the CLI, dispatcher, and filesystem-based queue mechanism — is now implemented and stable at the prototype level.
+The core functionality — including the CLI, dispatcher, and filesystem-based
+queue mechanism — is stable and ready for real-world usage in shared GPU
+servers.
 
-Current efforts are focused on:
+Future development will focus on:
 
-- Real-world testing in multi-user environments
-- Validation under realistic GPU workloads
-- Deployment strategy refinement
-- Operational hardening and usability improvements
-
-The project is transitioning from prototype development to evaluation, integration, and practical adoption within the target environment.
+- improving deployment tooling
+- expanding documentation and operational guidance
+- gathering feedback from real-world usage
 
 ---
 
@@ -101,6 +100,50 @@ PYTHONPATH=$(pwd) pytest \
 Coverage reports focus on deterministic logic and filesystem-based components.
 System-level execution (systemd, Docker, GPU access) is intentionally excluded
 from unit tests.
+
+---
+
+## Installation
+
+The deployment of **gpuq** involves system configuration steps including
+Docker rootless setup, systemd services, and filesystem permissions.
+
+Because of this, the installation process is documented as a structured
+deployment procedure rather than a simple package installation.
+
+For the complete setup guide, see:
+
+👉 [`docs/05-puesta-en-marcha.md`](docs/05-puesta-en-marcha.md)
+
+This document includes:
+
+- Step-by-step deployment instructions
+- Required system configuration
+- Docker rootless integration
+- systemd service setup
+- Rollback procedures in case of deployment issues
+
+---
+
+## Documentation
+
+The CLI reference is available in:
+
+- [`CLI_USAGE.md`](CLI_USAGE.md)
+
+or in the online documentation site.
+
+Complete documentation is available at:
+
+👉 [https://enolgargon.github.io/gpuq-docs/](https://enolgargon.github.io/gpuq-docs/)
+
+The documentation includes:
+
+- Installation and deployment procedures
+- Rollback strategies for safe deployment
+- Docker integration guides
+- CLI usage reference
+- Operational recommendations for shared GPU servers
 
 ---
 
