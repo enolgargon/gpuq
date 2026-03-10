@@ -233,6 +233,7 @@ RestartSec=5
 Environment="PYTHONUNBUFFERED=1"
 Environment="PATH=/opt/gpuq/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
 Environment="GPUQ_QUEUE_ROOT=/var/lib/gpuq/queue/"
+Environment="GPUQ_SIGNALS_ROOT=/var/lib/gpuq/signals/"
 UMask=0007
 
 # Seguridad adicional
