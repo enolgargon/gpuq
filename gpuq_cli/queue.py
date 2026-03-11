@@ -24,6 +24,31 @@ STATES = ["queued", "running", "finished", "failed", "canceled"]
 # Internal helpers
 # -------------------------
 
+def _resolve_job_id(prefix: str) -> str:
+    """
+    Resolve a job id from a prefix.
+    The prefix must match exactly one job.
+    """
+    matches = []
+
+    for state in STATES:
+        state_dir = QUEUE_ROOT / state
+
+        for file in state_dir.glob("*.yaml"):
+            job_id = file.stem
+            if job_id.startswith(prefix):
+                matches.append(job_id)
+
+    if not matches:
+        raise QueueError(f"No job found matching '{prefix}'")
+
+    if len(matches) > 1:
+        raise QueueError(
+            f"Ambiguous job id '{prefix}' (matches: {', '.join(matches)})"
+        )
+
+    return matches[0]
+
 def _ensure_signals_structure() -> None:
     """
     Ensure that the signals root and cancel directory exist.
@@ -143,6 +168,7 @@ def cancel_job(job_id: str) -> None:
     _ensure_signals_structure()
 
     # Validate that job exists
+    job_id = _resolve_job_id(job_id)
     current_path = _find_job(job_id)
 
     if current_path is None:

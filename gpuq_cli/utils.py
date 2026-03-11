@@ -26,4 +26,4 @@ def get_current_user() -> str:
 
 
 def generate_job_id() -> str:
-    return f"job-{uuid.uuid4().hex[:8]}"
+    return f"{uuid.uuid4().hex[:8]}"
