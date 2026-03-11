@@ -7,6 +7,7 @@ from .queue import enqueue_job, list_jobs, cancel_job
 from .utils import generate_job_id, get_current_user, now_iso8601
 from .errors import JobValidationError, QueueError
 from . import __version__
+from .colors import status, bold, warning
 
 
 # -------------------------
@@ -126,16 +127,22 @@ def handle_list(args: argparse.Namespace) -> None:
         jobs.extend(list_jobs("running"))
 
     if not jobs:
-        print("No jobs found.")
+        print(warning("No jobs found."))
         return
 
-    print(f"{'JOB ID':12} {'USER':10} {'STATUS':10} {'CREATED':20} DESCRIPTION")
+    print(
+        f"{bold('JOB ID'):12} "
+        f"{bold('USER'):10} "
+        f"{bold('STATUS'):10} "
+        f"{bold('CREATED'):20} "
+        f"{bold('DESCRIPTION')}"
+    )
 
     for job in jobs:
         print(
             f"{job.job_id:12} "
             f"{job.user:10} "
-            f"{job.state:10} "
+            f"{status(job.state):10} "
             f"{job.created_at:20} "
             f"{job.description}"
         )
