@@ -1,4 +1,5 @@
 import sys
+import os
 
 USE_COLOR = sys.stdout.isatty() and "NO_COLOR" not in os.environ
 
