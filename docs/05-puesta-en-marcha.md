@@ -441,3 +441,43 @@ systemctl status gpuq-dispatcher
 ```bash
 gpuq submit --project ./test_gpuq --description "post-reboot test"
 ```
+
+
+# Ampliaciones opcionales
+## Recolector de basura `gpuq admin gc`
+La orden `gpuq admin gc` está pensada para hacer recolección de basura y eliminar todos los trabajos antiguos que se encuentren en estado finalizado, fallido o cancelado. Su uso puede ser manual por parte del administrador, pero opcionalmente se puede configurar un trabajo periódico que lo configure. 
+
+Para configurar la ejecución periódica mediante `cron` se deben seguir los siguientes pasos:
+
+1. Editar el `crontab` del usuario root.
+```bash
+sudo crontab -e
+```
+
+2.  En el editor que se abre, añadir una nueva entrada que ejecute el recolector de basura una vez al día. Por ejemplo, para ejecutarlo diariamente a las 03:00:
+```plain
+0 3 * * * /usr/local/bin/gpuq admin gc
+```
+
+Si el ejecutable se encuentra en otra ubicación deberá utilizarse la ruta completa correspondiente.
+
+Este trabajo eliminará automáticamente todos los trabajos en estado finished, failed o canceled cuyo campo finished_at sea anterior al periodo de retención configurado (14 días por defecto).
+
+También es posible modificar el periodo de retención utilizando la opción --days. Por ejemplo, para mantener los trabajos durante 30 días:
+```plain
+0 3 * * * /usr/local/bin/gpuq admin gc --days 30
+```
+
+### Rollback
+En el caso de querer deshacer esta medida se debe:
+
+1. Editar nuevamente el `crontab` del usuario root.
+
+```bash
+sudo crontab -e
+```
+
+2. Localizar y eliminar la línea correspondiente al recolector de basura:
+```plain
+0 3 * * * /usr/local/bin/gpuq admin gc
+```
