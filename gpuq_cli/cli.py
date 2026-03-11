@@ -136,11 +136,11 @@ def handle_list(args: argparse.Namespace) -> None:
     created_width = column_width("CREATED", [j.created_at for j in jobs])
 
     print(
-        f"{bold('JOB ID':<{id_width})} "
-        f"{bold('USER':<{user_width})} "
-        f"{bold('STATUS':<{status_width})} "
-        f"{bold('CREATED':<{created_width})} "
-        f"{bold('DESCRIPTION')}"
+        bold(f"{'JOB ID':<{id_width}} ")
+        bold(f"{'USER':<{user_width}} ")
+        bold(f"{'STATUS':<{status_width}} ")
+        bold(f"{'CREATED':<{created_width}} ")
+        bold(f"{'DESCRIPTION'}")
     )
 
     for job in jobs:
