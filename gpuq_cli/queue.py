@@ -2,9 +2,10 @@ from pathlib import Path
 from typing import List, Optional
 import os
 
+from datetime import datetime, timedelta
 from .jobs import Job
 from .errors import QueueError
-from .utils import now_iso8601
+from .utils import now_iso8601, parse_iso8601
 
 
 # -------------------------
@@ -192,3 +193,32 @@ def cancel_job(job_id: str) -> None:
         raise QueueError(
             f"Failed to create cancel signal for job '{job_id}': {e}"
         )
+
+
+def garbage_collect(days: int = 14) -> int:
+    _ensure_queue_structure()
+
+    cutoff = datetime.utcnow() - timedelta(days=days)
+    removable_states = ["finished", "failed", "canceled"]
+    removed = 0
+
+    for state in removable_states:
+        state_dir = QUEUE_ROOT / state
+
+        for job_file in state_dir.glob("*.yaml"):
+            try:
+                job = Job.from_yaml(job_file.read_text())
+
+                if not job.finished_at:
+                    continue
+
+                finished = parse_iso8601(job.finished_at)
+
+                if finished < cutoff:
+                    job_file.unlink()
+                    removed += 1
+
+            except Exception:
+                continue
+
+    return removed

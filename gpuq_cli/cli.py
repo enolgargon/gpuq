@@ -79,6 +79,30 @@ def build_parser() -> argparse.ArgumentParser:
         "job_id",
         help="ID of the job to cancel"
     )
+    
+    # admin
+    admin_parser = subparsers.add_parser(
+        "admin",
+        help="Administrative commands"
+    )
+
+    admin_subparsers = admin_parser.add_subparsers(
+        dest="admin_command",
+        required=True
+    )
+
+    ## admin gc
+    gc_parser = admin_subparsers.add_parser(
+        "gc",
+        help="Garbage collect old jobs"
+    )
+
+    gc_parser.add_argument(
+        "--days",
+        type=int,
+        default=14,
+        help="Delete jobs older than N days (default: 14)"
+    )
 
     return parser
 
@@ -158,6 +182,20 @@ def handle_cancel(args: argparse.Namespace) -> None:
     print(f"Job '{args.job_id}' canceled.")
 
 
+def handle_admin(args: argparse.Namespace) -> None:
+    if args.admin_command == "gc":
+        handle_gc(args)
+    else:
+        raise ValueError(f"Unknown admin command: {args.command}")
+
+
+def handle_gc(args: argparse.Namespace) -> None:
+    ensure_admin()
+
+    removed = garbage_collect(days=args.days)
+    print(f"Removed {removed} old jobs.")
+
+
 # -------------------------
 # Dispatcher entry
 # -------------------------
@@ -169,5 +207,7 @@ def dispatch(args: argparse.Namespace) -> None:
         handle_list(args)
     elif args.command == "cancel":
         handle_cancel(args)
+    elif args.command == "admin":
+        handle_admin(args)
     else:
         raise ValueError(f"Unknown command: {args.command}")
