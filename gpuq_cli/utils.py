@@ -27,3 +27,6 @@ def get_current_user() -> str:
 
 def generate_job_id() -> str:
     return f"{uuid.uuid4().hex[:8]}"
+
+def column_width(header: str, values: list[str]) -> int:
+    return max(len(header), *(len(v) for v in values))

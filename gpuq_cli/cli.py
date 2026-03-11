@@ -4,7 +4,7 @@ from typing import List
 
 from .jobs import Job
 from .queue import enqueue_job, list_jobs, cancel_job
-from .utils import generate_job_id, get_current_user, now_iso8601
+from .utils import generate_job_id, get_current_user, now_iso8601, column_width
 from .errors import JobValidationError, QueueError
 from . import __version__
 from .colors import status, bold, warning
@@ -130,20 +130,25 @@ def handle_list(args: argparse.Namespace) -> None:
         print(warning("No jobs found."))
         return
 
+    id_width = column_width("JOB ID", [j.job_id for j in jobs])
+    user_width = column_width("USER", [j.user for j in jobs])
+    status_width = column_width("STATUS", [j.state for j in jobs])
+    created_width = column_width("CREATED", [j.created_at for j in jobs])
+
     print(
-        f"{bold('JOB ID'):12} "
-        f"{bold('USER'):10} "
-        f"{bold('STATUS'):10} "
-        f"{bold('CREATED'):20} "
+        f"{bold('JOB ID'):<{id_width}} "
+        f"{bold('USER'):<{user_width}} "
+        f"{bold('STATUS'):<{status_width}} "
+        f"{bold('CREATED'):<{created_width}} "
         f"{bold('DESCRIPTION')}"
     )
 
     for job in jobs:
         print(
-            f"{job.job_id:12} "
-            f"{job.user:10} "
-            f"{status(job.state):10} "
-            f"{job.created_at:20} "
+            f"{job.job_id:<{id_width}} "
+            f"{job.user:<{user_width}} "
+            f"{status(job.state):<{status_width}} "
+            f"{job.created_at:<{created_width}} "
             f"{job.description}"
         )
 
