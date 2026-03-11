@@ -40,7 +40,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path to project directory"
     )
     submit_parser.add_argument(
-        "-c"
+        "-c",
         "--compose",
         default="docker-compose.yml",
         help="Docker Compose file name (default: docker-compose.yml)"
