@@ -58,7 +58,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="List jobs"
     )
     list_parser.add_argument(
-        "-s"
+        "-s",
         "--state",
         choices=["queued", "running", "finished", "failed", "canceled"],
         help="Filter jobs by state"
