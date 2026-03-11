@@ -4,7 +4,7 @@ import sys
 
 from .cli import build_parser, dispatch
 from .errors import GpuqError, JobValidationError, QueueError
-
+from .colors import error
 
 def main() -> int:
     parser = build_parser()
