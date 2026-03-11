@@ -15,6 +15,7 @@ class Job:
     description: str = ""
     started_at: Optional[str] = None
     finished_at: Optional[str] = None
+    state: Optional[str] = None
 
     def __post_init__(self) -> None:
         self._validate()

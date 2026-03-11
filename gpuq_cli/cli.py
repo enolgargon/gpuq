@@ -39,11 +39,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path to project directory"
     )
     submit_parser.add_argument(
+        "-c"
         "--compose",
         default="docker-compose.yml",
         help="Docker Compose file name (default: docker-compose.yml)"
     )
     submit_parser.add_argument(
+        "-d"
         "--description",
         default="",
         help="Optional job description"
@@ -55,9 +57,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="List jobs"
     )
     list_parser.add_argument(
+        "-s"
         "--state",
         choices=["queued", "running", "finished", "failed", "canceled"],
         help="Filter jobs by state"
+    )
+    list_parser.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="Show all jobs (including finished/failed/canceled)"
     )
 
     # cancel
@@ -103,16 +112,31 @@ def handle_submit(args: argparse.Namespace) -> None:
 
 
 def handle_list(args: argparse.Namespace) -> None:
-    jobs: List[Job] = list_jobs(state=args.state)
+
+    jobs = []
+
+    if args.state:
+        jobs = list_jobs(state=args.state)
+
+    elif args.all:
+        jobs = list_jobs()
+
+    else:
+        jobs.extend(list_jobs("queued"))
+        jobs.extend(list_jobs("running"))
 
     if not jobs:
         print("No jobs found.")
         return
 
+    print(f"{'JOB ID':12} {'USER':10} {'STATUS':10} {'CREATED':20} DESCRIPTION")
+
     for job in jobs:
         print(
-            f"{job.job_id} | {job.user} | "
-            f"{job.created_at} | "
+            f"{job.job_id:12} "
+            f"{job.user:10} "
+            f"{job.state:10} "
+            f"{job.created_at:20} "
             f"{job.description}"
         )
 

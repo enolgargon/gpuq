@@ -107,6 +107,7 @@ def list_jobs(state: Optional[str] = None) -> List[Job]:
             try:
                 content = file.read_text()
                 job = Job.from_yaml(content)
+                job.state = s
                 jobs.append(job)
             except Exception as e:
                 raise QueueError(f"Failed to load job '{file.name}': {e}")
@@ -127,7 +128,9 @@ def load_job(job_id: str) -> Job:
 
     try:
         content = job_path.read_text()
-        return Job.from_yaml(content)
+        job = Job.from_yaml(content)
+        job.state = job_path.parent.name
+        return job
     except Exception as e:
         raise QueueError(f"Failed to load job '{job_id}': {e}")
 
