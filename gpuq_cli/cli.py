@@ -4,7 +4,7 @@ from typing import List
 
 from .jobs import Job
 from .queue import enqueue_job, list_jobs, cancel_job
-from .utils import generate_job_id, get_current_user, now_iso8601, column_width
+from .utils import generate_job_id, get_current_user, now_iso8601, column_width, ensure_admin
 from .errors import JobValidationError, QueueError
 from . import __version__
 from .colors import status, bold, warning
