@@ -27,12 +27,12 @@ def main() -> int:
         return 4
 
     except KeyboardInterrupt:
-        print(error()"Interrupted by user."), file=sys.stderr)
+        print(error("Interrupted by user."), file=sys.stderr)
         return 130
 
     except Exception as e:
         # Unexpected error: let it be visible
-        print(errorf"Unexpected error: {e}"), file=sys.stderr)
+        print(error(f"Unexpected error: {e}"), file=sys.stderr)
         return 1
 
 
