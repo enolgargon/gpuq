@@ -46,7 +46,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Docker Compose file name (default: docker-compose.yml)"
     )
     submit_parser.add_argument(
-        "-d"
+        "-d",
         "--description",
         default="",
         help="Optional job description"
