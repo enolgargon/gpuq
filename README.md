@@ -69,7 +69,7 @@ The intended trust model is **cooperative users** on a shared system.
 
 ## Project Status
 
-gpuq has reached its first stable release (**v1.0**).
+Current stable version: v1.1
 
 The core functionality — including the CLI, dispatcher, and filesystem-based
 queue mechanism — is stable and ready for real-world usage in shared GPU
