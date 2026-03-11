@@ -6,6 +6,7 @@ from .jobs import Job
 from .queue import enqueue_job, list_jobs, cancel_job
 from .utils import generate_job_id, get_current_user, now_iso8601
 from .errors import JobValidationError, QueueError
+from . import __version__
 
 
 # -------------------------
@@ -16,6 +17,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="gpuq",
         description="Minimal GPU job queue CLI"
+    )
+
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+        help="Show gpuq version and exit"
     )
 
     subparsers = parser.add_subparsers(dest="command", required=True)
